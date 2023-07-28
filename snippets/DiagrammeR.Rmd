@@ -1,0 +1,145 @@
+---
+title: "DiagrammeR"
+author: "Anthony Kimpton"
+date: "31/05/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(DiagrammeR)
+library(lavaanPlot)
+library(lavaan)
+library(lattice)
+```
+
+http://rich-iannone.github.io/DiagrammeR/graphviz_and_mermaid.html
+
+https://cran.r-project.org/web/packages/lavaanPlot/vignettes/Intro_to_lavaanPlot.html
+
+```{r}
+model <- 'mpg ~ cyl + disp + hp
+          qsec ~ disp + hp + wt'
+fit <- sem(model, data = mtcars)
+summary(fit)
+labels <- list(mpg = "Miles Per Gallon", cyl = "Cylinders", disp = "Displacement", hp = "Horsepower", qsec = "Speed", wt = "Weight")
+lavaanPlot(model = fit, labels = labels, node_options = list(shape = "box", fontname = "Helvetica"), edge_options = list(color = "grey"), coefs = TRUE, stand=TRUE, stars = TRUE)
+
+
+semPlot::semPaths(fit, title = FALSE, curvePivot = TRUE)
+
+```
+
+
+
+```{r}
+
+temp <- ss[16,4]
+grViz("
+digraph boxes_and_circles {
+# graph attributes
+  graph [overlap = false, fontsize = 10, rankdir = LR, newrank='true']
+
+  node [shape = oval]
+  A a b c d 11 12 13 21 22 23 31 32 33 34 41 42 43 44 45
+
+A -> {a b c d}
+a -> {11 12 13}
+b -> {21 22 23}
+c -> {31 32 33 34}
+d -> {41 42 43 44 45}
+a -> a [dir=both, label = temp]
+b -> b [dir=both]
+c -> c [dir=both]
+d -> d [dir=both]
+}
+")
+```
+
+
+```{r}
+grViz("
+digraph boxes_and_circles {
+# graph attributes
+  graph [overlap = false, fontsize = 10, rankdir = LR, newrank='true']
+
+# formative latent variable
+  node [shape = oval,
+        width= 2.6,
+        height=1,
+        fixedsize = true,
+        fontname = Helvetica,
+        fixedsize = false,
+        style = filled,
+        fillcolor = black,
+        fontcolor = white,
+        rank=max]
+  A [label = 'Social Sustainablity']
+
+# reflective latent variables
+  node [shape = oval,
+        fontname = Helvetica,
+        fixedsize = true,
+        style = 'filled',
+        fillcolor = black,
+        fontcolor = white]
+  a [label = 'Sense of Place']
+  b [label = 'Sense of Community']
+  c [label = 'Obligations, Expectations,\nand Trustworthiness']
+  d [label = 'Norms and Effective\n Sanctions']
+
+# indicator variables
+  node [shape = rect,
+        width= 3.5,
+        height=0.5,
+        fixedsize = true,
+        style = filled,
+        fillcolor = white,
+        fontcolor = black,
+        rank=same]
+  11 [label = 'I feel that I belong to\nthis community']
+  12 [label = 'I would like to be living in this\ncommunity in three years' time']
+  13 [label = 'I am proud to live in this\nlocal community']
+  21 [label = 'our community members willingly\nhelp their neighbors']
+  22 [label = 'this is a close-knit\ncommunity']
+  23 [label = 'our community members\ncan be trusted']
+  31 [label = 'community will intervene if a child\nis spraying graffiti']
+  32 [label = 'community will intervene if a child\nis disrespecting an adult']
+  33 [label = 'community will intervene if a fire station\nis closing due to budget cuts']
+  34 [label = 'community will intervene if someone\nis dealing illegal drugs']
+  41 [label = 'illegal drugs are currently\na community problem']
+  42 [label = 'public drinking is currently\na community problem']
+  43 [label = 'vandalism and/or graffiti are\ncurrently community problems']
+  44 [label = 'illegal driving is currently\na community problem']
+  45 [label = 'youth getting into trouble is\ncurrently a community problem']
+
+# paths and errors
+  A->a  [dir=back,label = 'test'] a->a [style=dashed, dir=both, label='error']
+  A->b  [dir=back,label = 'test'] b->b [style=dashed, dir=both, label='error']
+  A->c  [dir=back,label = 'test'] c->c [style=dashed, dir=both, label='error']
+  A->d  [dir=back,label = 'test'] d->d [style=dashed, dir=both, label='error']
+
+  a-> 11 [label = 'test'] 11->11 [style=dashed, dir=both, label='error']
+  a-> 12 [label = 'test'] 12->12 [style=dashed, dir=both, label='error']
+  a-> 13 [label = 'test'] 13->13 [style=dashed, dir=both, label='error']
+
+  b-> 21 [label = 'test'] 21->21 [style=dashed, dir=both, label='error']
+  b-> 22 [label = 'test'] 22->22 [style=dashed, dir=both, label='error']
+  b-> 23 [label = 'test'] 23->23 [style=dashed, dir=both, label='error']
+  
+  c-> 31 [label = 'test'] 31->31 [style=dashed, dir=both, label='error']
+  c-> 32 [label = 'test'] 32->32 [style=dashed, dir=both, label='error']
+  c-> 33 [label = 'test'] 33->33 [style=dashed, dir=both, label='error']
+  c-> 34 [label = 'test'] 34->34 [style=dashed, dir=both, label='error']
+
+  d-> 41 [label = 'test'] 41->41 [style=dashed, dir=both, label='error']
+  d-> 42 [label = 'test'] 42->42 [style=dashed, dir=both, label='error']
+  d-> 43 [label = 'test'] 43->43 [style=dashed, dir=both, label='error']
+  d-> 44 [label = 'test'] 44->44 [style=dashed, dir=both, label='error']
+  d-> 45 [label = 'test'] 45->45 [style=dashed, dir=both, label='error']
+}
+")
+```
+
+
+
